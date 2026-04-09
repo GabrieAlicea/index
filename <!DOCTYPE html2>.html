@@ -1,0 +1,597 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handled — Home Management, Central Florida</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0b0b0b;
+    --off-white: #f5f2ec;
+    --gold: #c9a84c;
+    --gold-light: #e0c47a;
+    --muted: #7a7570;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--off-white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.4rem 3rem;
+    background: rgba(11,11,11,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; letter-spacing: 0.06em; color: var(--gold); }
+  .nav-cta {
+    background: var(--gold); color: var(--black); border: none;
+    padding: 0.6rem 1.5rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s; text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--gold-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; padding: 8rem 3rem 5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.8rem; opacity: 0; animation: fadeUp 0.8s 0.1s forwards;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 400; line-height: 1.08; max-width: 780px;
+    opacity: 0; animation: fadeUp 0.9s 0.25s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    margin-top: 2rem; font-size: 1.1rem; line-height: 1.7;
+    color: #b0aa9e; max-width: 560px; opacity: 0; animation: fadeUp 0.9s 0.45s forwards;
+  }
+  .hero-actions {
+    margin-top: 3rem; display: flex; align-items: center;
+    gap: 2rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+  }
+  .btn-primary {
+    background: var(--gold); color: var(--black); border: none;
+    padding: 1rem 2.4rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.2s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .hero-note { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; }
+
+  /* DAILY BAR */
+  .daily-bar {
+    background: var(--gold); color: var(--black); text-align: center;
+    padding: 1rem; font-size: 0.82rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+
+  /* SHARED */
+  .section { padding: 6rem 3rem; }
+  .section-label {
+    font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .section h2, .section-h2 {
+    font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400; line-height: 1.2; max-width: 600px; margin-bottom: 3rem;
+  }
+
+  /* FOR YOU */
+  .for-you-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .for-you-item {
+    padding: 2.2rem 2rem; border: 1px solid rgba(255,255,255,0.06); transition: background 0.25s;
+  }
+  .for-you-item:hover { background: rgba(201,168,76,0.05); }
+  .check { color: var(--gold); font-size: 1.2rem; margin-bottom: 0.8rem; }
+  .for-you-item p { font-size: 0.95rem; line-height: 1.6; color: #c0bab2; }
+
+  /* BEFORE / AFTER */
+  .transform-section { padding: 6rem 3rem; background: #0f0e0c; }
+  .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 3rem; max-width: 900px; }
+  .ba-col { padding: 2.8rem 2.5rem; }
+  .ba-col.before { background: rgba(255,255,255,0.03); }
+  .ba-col.after { background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); }
+  .ba-label { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1.8rem; color: var(--muted); }
+  .ba-col.after .ba-label { color: var(--gold); }
+  .ba-list { list-style: none; }
+  .ba-list li {
+    padding: 0.7rem 0; font-size: 0.95rem; color: #9a9490;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .ba-col.after .ba-list li { color: #d0cbc2; }
+  .ba-list li::before { content: '—'; color: #444; flex-shrink: 0; }
+  .ba-col.after .ba-list li::before { content: '✓'; color: var(--gold); }
+
+  /* PRICING */
+  .pricing-section { padding: 6rem 3rem; }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 1px; margin-top: 3rem; border: 1px solid rgba(255,255,255,0.06);
+  }
+  .plan {
+    padding: 3rem 2.5rem; border: 1px solid rgba(255,255,255,0.06);
+    position: relative; transition: background 0.25s;
+    display: flex; flex-direction: column;
+  }
+  .plan:hover { background: rgba(201,168,76,0.04); }
+  .plan.featured { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.06); }
+  .plan-badge {
+    position: absolute; top: -1px; right: 2rem;
+    background: var(--gold); color: var(--black);
+    font-size: 0.6rem; font-weight: 500; letter-spacing: 0.15em;
+    text-transform: uppercase; padding: 0.3rem 0.9rem;
+  }
+  .plan-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 0.3rem; }
+  .plan-tagline { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.8rem; }
+  .plan-price { font-size: 3rem; font-weight: 700; line-height: 1; margin-bottom: 0.3rem; }
+  .plan-price sup { font-size: 1.2rem; vertical-align: super; font-weight: 300; }
+  .plan-price span { font-size: 0.85rem; font-weight: 300; color: var(--muted); }
+  .plan-daily { font-size: 0.78rem; color: var(--gold); margin-bottom: 2rem; }
+  .plan-features { list-style: none; margin-bottom: 2.5rem; flex: 1; }
+  .plan-features li {
+    padding: 0.65rem 0; font-size: 0.88rem; color: #b0aa9e;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: flex-start; gap: 0.7rem;
+  }
+  .plan-features li::before { content: '·'; color: var(--gold); flex-shrink: 0; margin-top: 2px; }
+  .plan-cta {
+    display: block; width: 100%; padding: 1rem; text-align: center;
+    font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    border: 1px solid rgba(201,168,76,0.4); background: transparent;
+    color: var(--gold); cursor: pointer; transition: all 0.2s; text-decoration: none;
+  }
+  .plan-cta:hover, .plan.featured .plan-cta { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+  /* EXTRAS */
+  .extras-section { padding: 2rem 3rem 6rem; }
+  .extras-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 400; margin-bottom: 2.5rem;
+  }
+  .extras-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px; border: 1px solid rgba(255,255,255,0.07); max-width: 860px;
+  }
+  .extra-item {
+    padding: 1.6rem 2rem; border: 1px solid rgba(255,255,255,0.06);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; transition: background 0.2s;
+  }
+  .extra-item:hover { background: rgba(201,168,76,0.04); }
+  .extra-name { font-size: 0.9rem; color: #c0bab2; }
+  .extra-price { font-size: 1rem; font-weight: 500; color: var(--gold); white-space: nowrap; }
+
+  /* WHY */
+  .why-section { padding: 6rem 3rem; background: #0f0e0c; }
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  .why-item { padding: 2rem 0; border-top: 1px solid rgba(201,168,76,0.3); }
+  .why-num { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: rgba(201,168,76,0.2); line-height: 1; margin-bottom: 1rem; }
+  .why-item h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 400; margin-bottom: 0.7rem; }
+  .why-item p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+  /* CONTACT */
+  .contact-section { padding: 7rem 3rem; border-top: 1px solid rgba(255,255,255,0.07); }
+  .contact-inner { max-width: 640px; margin: 0 auto; }
+  .contact-section .section-label { text-align: center; }
+  .contact-h2 {
+    font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400; line-height: 1.15; text-align: center; margin-bottom: 0.8rem;
+  }
+  .contact-sub { text-align: center; color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 3rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-field label { font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    color: var(--off-white); padding: 0.85rem 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 300;
+    outline: none; transition: border-color 0.2s; width: 100%;
+    -webkit-appearance: none; appearance: none;
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus { border-color: var(--gold); }
+  .form-field select option { background: #1a1814; }
+  .form-field textarea { resize: vertical; min-height: 110px; }
+  .form-submit { margin-top: 2rem; }
+  .form-submit button {
+    background: var(--gold); color: var(--black); border: none;
+    padding: 1.05rem 3rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.2s;
+    width: 100%;
+  }
+  .form-submit button:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .form-submit button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .form-note { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); text-align: center; }
+  .form-success {
+    display: none; text-align: center; padding: 3rem 2rem;
+    border: 1px solid rgba(201,168,76,0.3); margin-top: 1rem;
+  }
+  .form-success h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 400; color: var(--gold); margin-bottom: 1rem; }
+  .form-success p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    padding: 2rem 3rem; display: flex;
+    justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-logo { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 1.1rem; }
+  footer p { font-size: 0.75rem; color: var(--muted); }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(24px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  @media(max-width:640px){
+    nav { padding: 1.2rem 1.5rem; }
+    .hero, .section, .pricing-section, .extras-section,
+    .why-section, .transform-section, .contact-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .ba-grid, .form-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Handled.</div>
+  <a href="#contact" class="nav-cta">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Central Florida's Home Management Service</p>
+  <h1>Never worry about<br>your home <em>again.</em></h1>
+  <p class="hero-sub">We handle the cleaning, laundry, errands, and upkeep — so you get your time back every single week. Completely done for you.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">See Our Plans</a>
+    <span class="hero-note">Serving Orlando · Lake Nona · Winter Garden · Windermere · Clermont</span>
+  </div>
+</section>
+
+<!-- DAILY BAR -->
+<div class="daily-bar">
+  Less than $20/day to completely eliminate your household chores — starting today.
+</div>
+
+<!-- FOR YOU -->
+<section class="section">
+  <p class="section-label">Who This Is For</p>
+  <h2>Built for people who value their time.</h2>
+  <div class="for-you-grid">
+    <div class="for-you-item">
+      <div class="check">✦</div>
+      <p>You're busy and your home always falls behind no matter how hard you try to stay ahead.</p>
+    </div>
+    <div class="for-you-item">
+      <div class="check">✦</div>
+      <p>You spend weekends doing laundry and cleaning instead of the things that actually matter to you.</p>
+    </div>
+    <div class="for-you-item">
+      <div class="check">✦</div>
+      <p>You've thought about hiring help but don't want to manage multiple vendors and schedules.</p>
+    </div>
+    <div class="for-you-item">
+      <div class="check">✦</div>
+      <p>You'd rather pay once and have everything handled — professionally, consistently, without thinking about it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="transform-section">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p class="section-label">The Transformation</p>
+    <div class="section-h2" style="max-width:600px;margin-bottom:3rem;">Two versions of your life. You choose.</div>
+    <div class="ba-grid">
+      <div class="ba-col before">
+        <div class="ba-label">Before Handled</div>
+        <ul class="ba-list">
+          <li>Messy home after a long work week</li>
+          <li>Laundry piling up all weekend</li>
+          <li>Sunday stress instead of rest</li>
+          <li>Multiple apps and vendors to manage</li>
+          <li>Nothing ever feels fully under control</li>
+        </ul>
+      </div>
+      <div class="ba-col after">
+        <div class="ba-label">After Handled</div>
+        <ul class="ba-list">
+          <li>Walk into a clean home, every time</li>
+          <li>Laundry done, folded, put away</li>
+          <li>Weekends fully yours again</li>
+          <li>One service. One call. Everything handled.</li>
+          <li>Total peace of mind, every week</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p class="section-label">Service Plans</p>
+    <div class="section-h2" style="max-width:600px;margin-bottom:3rem;">Choose your level of freedom.</div>
+    <div class="pricing-grid">
+
+      <!-- ESSENTIAL LIVING -->
+      <div class="plan">
+        <div class="plan-name">Essential Living</div>
+        <div class="plan-tagline">Best for apartments, singles & couples</div>
+        <div class="plan-price"><sup>$</sup>450<span>/mo</span></div>
+        <div class="plan-daily">≈ $18/day for a handled home</div>
+        <ul class="plan-features">
+          <li>Trash valet — 1× per week</li>
+          <li>Laundry — 1 load per week (wash, dry & fold)</li>
+          <li>Light cleaning — 2× per month</li>
+          <li>Exterior car wash — 2× per month</li>
+          <li>Grocery pickup — 2× per month</li>
+        </ul>
+        <a href="#contact" class="plan-cta" data-plan="Essential Living — $450/mo">Start My Service</a>
+      </div>
+
+      <!-- FULL HOME SYSTEM -->
+      <div class="plan featured">
+        <div class="plan-badge">Most Popular</div>
+        <div class="plan-name">Full Home System</div>
+        <div class="plan-tagline">Best for families & busy households</div>
+        <div class="plan-price"><sup>$</sup>750<span>/mo</span></div>
+        <div class="plan-daily">≈ $26/day — your time is worth more</div>
+        <ul class="plan-features">
+          <li>Trash valet — 2× per week</li>
+          <li>Laundry — up to 2 loads per week</li>
+          <li>Weekly cleaning + 2× per month deep clean</li>
+          <li>Monthly deep clean</li>
+          <li>Interior + exterior car wash — 2× per month</li>
+          <li>Grocery pickup — 2× per month</li>
+          <li>Package & mail handling</li>
+          <li>Dedicated service coordinator</li>
+        </ul>
+        <a href="#contact" class="plan-cta" data-plan="Full Home System — $750/mo">Get My Home Handled</a>
+      </div>
+
+      <!-- CONCIERGE -->
+      <div class="plan">
+        <div class="plan-name">Concierge</div>
+        <div class="plan-tagline">Best for high-income clients & executives</div>
+        <div class="plan-price"><sup>$</sup>1,250<span>/mo</span></div>
+        <div class="plan-daily">≈ $41/day for total home peace</div>
+        <ul class="plan-features">
+          <li>Trash valet — 3× per week</li>
+          <li>Laundry — up to 4 loads per week</li>
+          <li>Weekly cleanings & resets</li>
+          <li>Monthly deep cleaning</li>
+          <li>Full car cleaning — weekly</li>
+          <li>Grocery pickup (ongoing)</li>
+          <li>Package & mail handling</li>
+          <li>Up to 2 hrs concierge requests weekly</li>
+          <li>Same-day service priority</li>
+          <li>Dedicated 1-on-1 home manager</li>
+        </ul>
+        <a href="#contact" class="plan-cta" data-plan="Concierge — $1,250/mo">Get Started Today</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:2rem;font-size:0.78rem;color:var(--muted);">
+      All plans include a complimentary onboarding walkthrough &nbsp;·&nbsp; No long-term contracts
+    </p>
+  </div>
+</section>
+
+<!-- ADD-ONS -->
+<section class="extras-section">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p class="section-label">Optional Add-Ons</p>
+    <div class="extras-title">Build your own bundle.</div>
+    <div class="extras-grid">
+      <div class="extra-item">
+        <span class="extra-name">Extra laundry load</span>
+        <span class="extra-price">$29<small style="font-size:0.7rem;color:var(--muted)">/load</small></span>
+      </div>
+      <div class="extra-item">
+        <span class="extra-name">Dishes — weekly service</span>
+        <span class="extra-price">$60<small style="font-size:0.7rem;color:var(--muted)">/mo</small></span>
+      </div>
+      <div class="extra-item">
+        <span class="extra-name">Pet waste cleanup</span>
+        <span class="extra-price">$39<small style="font-size:0.7rem;color:var(--muted)">/mo</small></span>
+      </div>
+      <div class="extra-item">
+        <span class="extra-name">Litter box cleaning</span>
+        <span class="extra-price">$40<small style="font-size:0.7rem;color:var(--muted)">/mo</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section">
+  <div style="max-width:1100px;margin:0 auto;">
+    <p class="section-label">Why Handled</p>
+    <div class="section-h2" style="max-width:600px;margin-bottom:3rem;">Not a cleaner. Not a task app.<br>Something different.</div>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-num">01</div>
+        <h3>One relationship, not five vendors</h3>
+        <p>We coordinate everything. You don't manage anyone — you just live your life.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">02</div>
+        <h3>Consistency you can count on</h3>
+        <p>Same team, same standards, every visit. No surprises, no no-shows.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">03</div>
+        <h3>Built for Central Florida life</h3>
+        <p>Designed around real households here — not a generic franchise template.</p>
+      </div>
+      <div class="why-item">
+        <div class="why-num">04</div>
+        <h3>Open to everyone</h3>
+        <p>Whether you're a single renter or a busy family of six, there's a plan built for your life.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="contact-section" id="contact">
+  <div class="contact-inner">
+    <p class="section-label">Get Started</p>
+    <h2 class="contact-h2">Your home. <em style="font-style:italic;color:var(--gold);">Finally</em> handled.</h2>
+    <p class="contact-sub">Fill out the form below and we'll reach out within 24 hours to confirm your plan and schedule your onboarding.</p>
+
+    <div id="form-success" class="form-success">
+      <h3>We've got you.</h3>
+      <p>Your request is in. We'll be in touch within 24 hours to get everything set up. Welcome to Handled.</p>
+    </div>
+
+    <!-- 
+      HOW TO ACTIVATE THE FORM:
+      1. Go to https://web3forms.com — it's free, no backend needed
+      2. Enter your email address and get your Access Key
+      3. Replace b0f9d191-ea3c-4d9d-8aca-78b5006c4779 below with your actual key
+      4. Done — all submissions will land directly in your inbox
+    -->
+    <form id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+      <input type="hidden" name="access_key" value="b0f9d191-ea3c-4d9d-8aca-78b5006c4779">
+      <input type="hidden" name="subject" value="New Handled Service Inquiry">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" name="first_name" required placeholder="First name">
+        </div>
+        <div class="form-field">
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" name="last_name" required placeholder="Last name">
+        </div>
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
+        <div class="form-field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(407) 000-0000">
+        </div>
+        <div class="form-field full">
+          <label for="plan">Plan You're Interested In</label>
+          <select id="plan" name="plan" required>
+            <option value="" disabled selected>Select a plan…</option>
+            <option value="Essential Living — $550/mo">Essential Living — $550/mo</option>
+            <option value="Full Home System — $775/mo">Full Home System — $775/mo</option>
+            <option value="Concierge — $1,250/mo">Concierge — $1,250/mo</option>
+            <option value="Not sure yet">Not sure yet — help me choose</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label for="city">Your City / Area</label>
+          <input type="text" id="city" name="city" placeholder="e.g. Clermont, Lake Nona, Winter Garden…">
+        </div>
+        <div class="form-field full">
+          <label for="addons">Add-Ons You're Interested In (optional)</label>
+          <input type="text" id="addons" name="addons" placeholder="e.g. Dishes service, Pet waste cleanup…">
+        </div>
+        <div class="form-field full">
+          <label for="message">Anything else we should know? (optional)</label>
+          <textarea id="message" name="message" placeholder="Household size, special requests, questions…"></textarea>
+        </div>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit" id="submit-btn">Get My Home Handled</button>
+      </div>
+      <p class="form-note">No commitment. We'll reach out within 24 hours to walk you through everything.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Handled.</div>
+  <p>Serving Central Florida — Orlando · Lake Nona · Winter Garden · Windermere · Clermont</p>
+  <p>© 2026 Handled. All rights reserved.</p>
+</footer>
+
+<script>
+  // Pre-fill plan dropdown when clicking a pricing CTA
+  document.querySelectorAll('[data-plan]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const select = document.getElementById('plan');
+      if (select) select.value = btn.dataset.plan;
+    });
+  });
+
+  // Form submission via Web3Forms
+  const form = document.getElementById('contact-form');
+  const btn = document.getElementById('submit-btn');
+  const successBox = document.getElementById('form-success');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: new FormData(form)
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        form.style.display = 'none';
+        successBox.style.display = 'block';
+        successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Get My Home Handled';
+        alert('Something went wrong. Please try again.');
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Get My Home Handled';
+      alert('Network error. Please check your connection and try again.');
+    }
+  });
+</script>
+</body>
+</html>
