@@ -11,7 +11,6 @@ export interface SliderProps
 export function Slider({ className, label, ...props }: SliderProps) {
   return (
     <SliderPrimitive.Root
-      aria-label={label}
       className={cn(
         "relative flex h-6 w-full touch-none select-none items-center",
         className
@@ -22,6 +21,7 @@ export function Slider({ className, label, ...props }: SliderProps) {
         <SliderPrimitive.Range className="absolute h-full rounded-pill bg-canopy-500" />
       </SliderPrimitive.Track>
       <SliderPrimitive.Thumb
+        aria-label={label}
         className={cn(
           "block h-5 w-5 rounded-pill bg-cream-50 border-2 border-canopy-500 shadow-soft",
           "focus-visible:focus-ring"

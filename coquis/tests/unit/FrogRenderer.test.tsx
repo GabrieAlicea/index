@@ -31,7 +31,25 @@ describe("FrogRenderer", () => {
       />
     );
 
-    // 5 spot circles + 4 eye circles
-    expect(container.querySelectorAll("circle")).toHaveLength(9);
+    // 5 spot circles + 4 eye circles + 1 tiny-hat pom circle
+    expect(container.querySelectorAll("circle")).toHaveLength(10);
+  });
+
+  it("only renders equipped accessories", () => {
+    const { container: none } = render(
+      <FrogRenderer config={{ ...DEFAULT_FROG_CONFIG, accessories: [] }} />
+    );
+    const { container: two } = render(
+      <FrogRenderer
+        config={{
+          ...DEFAULT_FROG_CONFIG,
+          accessories: ["tiny-hat", "explorer-backpack"],
+        }}
+      />
+    );
+
+    // Neither accessory adds a <rect>; the backpack does (2 rects).
+    expect(none.querySelectorAll("rect")).toHaveLength(0);
+    expect(two.querySelectorAll("rect")).toHaveLength(2);
   });
 });

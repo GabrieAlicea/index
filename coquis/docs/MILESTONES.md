@@ -23,10 +23,10 @@ next begins.
 - [x] Idle breathing + blink animation at 60fps
 - [x] `React.memo`'d, unit test asserts all layers render
 
-## M3 — Creator: customization panel
-- [ ] All customization axes wired live via `builderStore`
-- [ ] Keyboard-accessible swatches (WCAG §12)
-- [ ] Mobile bottom-sheet layout
+## M3 — Creator: customization panel ✅
+- [x] All customization axes wired live via `builderStore` (body/pattern/eyes/eye color/belly/toe color/size/smile/accessories)
+- [x] Keyboard-accessible swatches (WCAG §12) — verified roving-focus arrow-key nav, Enter-to-select, and visible focus rings
+- [x] Mobile bottom-sheet layout (desktop: inline aside; mobile: trigger + Radix-dialog-based bottom sheet)
 
 ## M4 — Name, personality & rarity
 - [ ] Name generator + manual rename

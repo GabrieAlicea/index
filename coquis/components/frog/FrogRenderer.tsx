@@ -7,6 +7,7 @@ import { FrogBelly } from "@/components/frog/FrogBelly";
 import { FrogMouth } from "@/components/frog/FrogMouth";
 import { FrogEyes } from "@/components/frog/FrogEyes";
 import { FrogToes } from "@/components/frog/FrogToes";
+import { FrogAccessories } from "@/components/frog/FrogAccessories";
 import { useFrogAnimationState } from "@/hooks/useFrogAnimationState";
 import type { FrogConfig } from "@/types/frog";
 
@@ -41,6 +42,7 @@ function FrogRendererComponent({ config, className }: FrogRendererProps) {
             eyeStyle={config.eyeStyle}
             blinking={animationState === "blinking"}
           />
+          <FrogAccessories accessories={config.accessories} />
         </motion.g>
       </g>
     </svg>

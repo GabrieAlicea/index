@@ -1,26 +1,36 @@
 import { Header } from "@/components/layout/Header";
 import { LinkButton } from "@/components/ui/LinkButton";
-import { FrogRenderer } from "@/components/frog/FrogRenderer";
-import { DEFAULT_FROG_CONFIG } from "@/lib/frog/frogConfig";
+import { FrogCanvasStage } from "@/components/creator/FrogCanvasStage";
+import { CreatorControls } from "@/components/creator/CreatorControls";
+import { RandomizeButton } from "@/components/creator/RandomizeButton";
 
 export default function CreatorPage() {
   return (
     <div className="flex min-h-screen flex-col bg-cream-50 dark:bg-midnight-900">
       <Header />
-      <main className="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-6 py-16 text-center">
-        <FrogRenderer config={DEFAULT_FROG_CONFIG} className="w-56 sm:w-64" />
+      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-10">
+        <div className="text-center">
+          <h1 className="font-display text-3xl font-semibold text-canopy-700 dark:text-leaf-300 sm:text-4xl">
+            Design your Coquí
+          </h1>
+          <p className="mt-2 font-body text-charcoal-800/75 dark:text-mist-100/75">
+            Pick colors, patterns, and accessories — your frog updates live.
+          </p>
+        </div>
 
-        <h1 className="mt-4 font-display text-4xl font-semibold text-canopy-700 dark:text-leaf-300">
-          Say hello to your Coquí
-        </h1>
-        <p className="mt-4 font-body text-charcoal-800/75 dark:text-mist-100/75">
-          Full color, pattern, and accessory customization hops in with
-          milestone M3. For now, this little one is just breathing and
-          blinking in its default colors.
-        </p>
-        <LinkButton href="/" variant="secondary" className="mt-8">
-          Back to the pond
-        </LinkButton>
+        <div className="mt-8 flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
+          <div className="w-full max-w-md space-y-4">
+            <FrogCanvasStage />
+            <div className="flex justify-center gap-3">
+              <RandomizeButton />
+              <LinkButton href="/" variant="ghost">
+                Back to the pond
+              </LinkButton>
+            </div>
+          </div>
+
+          <CreatorControls />
+        </div>
       </main>
     </div>
   );
