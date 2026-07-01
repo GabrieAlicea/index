@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-cream-50 text-charcoal-800 antialiased;
+    @apply dark:bg-midnight-900 dark:text-mist-100;
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply outline-none ring-2 ring-offset-2 ring-canopy-500 ring-offset-cream-50 dark:ring-offset-midnight-900;
+  }
+}
