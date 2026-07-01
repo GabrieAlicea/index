@@ -29,7 +29,7 @@ repo root, and nothing at the repo root affects Frogies.
 
 | Concern | Choice | Why |
 |---|---|---|
-| Framework | Next.js 14+ (App Router) | File-system routing, RSC for fast first paint on the landing page, built-in image/font optimization, easy SEO primitives (`sitemap.ts`, `robots.ts`, `metadata`). |
+| Framework | Next.js 16 (App Router) | File-system routing, RSC for fast first paint on the landing page, built-in image/font optimization, easy SEO primitives (`sitemap.ts`, `robots.ts`, `metadata`). Originally scoped as "14+"; scaffolded directly against the latest stable release (16.2.9) at M0 since 14.x's final patch still carried several unresolved high/critical advisories, and no version-specific APIs were in play yet to make upgrading costly. Lint runs via a flat `eslint.config.mjs` (`next lint` was removed in this version) — `npm run lint` calls `eslint .` directly. |
 | Language | TypeScript (strict) | Frog configs, trait tables, and animation state machines are exactly the kind of structured data that benefits from exhaustive typing. |
 | Styling | Tailwind CSS | Fast iteration on a large, consistent design-token set; pairs well with a component library that needs many small visual variants (swatches, panels, badges). |
 | Motion | Framer Motion | Declarative variants/orchestration for UI transitions and layered SVG frog animation (breathing, blinking, jumping) with built-in `prefers-reduced-motion` support via `MotionConfig`. |
