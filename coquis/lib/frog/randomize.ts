@@ -6,21 +6,15 @@ import {
   TOE_COLOR_PALETTE,
 } from "@/data/colorPalettes";
 import { ACCESSORY_CATALOG } from "@/data/accessories";
+import { pick, randomInt } from "@/lib/frog/random";
+import { rollRarity } from "@/lib/frog/rarity";
 
 const PATTERNS: BodyPattern[] = ["solid", "spots", "stripes"];
 const EYE_STYLES: EyeStyle[] = ["round", "sleepy", "wide"];
 const MAX_RANDOM_ACCESSORIES = 2;
 
-function pick<T>(options: readonly T[]): T {
-  const option = options[Math.floor(Math.random() * options.length)];
-  if (option === undefined) {
-    throw new Error("pick() called with an empty options array");
-  }
-  return option;
-}
-
 export function randomizeFrogConfig(): FrogConfig {
-  const accessoryCount = Math.floor(Math.random() * (MAX_RANDOM_ACCESSORIES + 1));
+  const accessoryCount = randomInt(0, MAX_RANDOM_ACCESSORIES);
   const shuffledAccessories = [...ACCESSORY_CATALOG].sort(() => Math.random() - 0.5);
 
   return {
@@ -30,9 +24,9 @@ export function randomizeFrogConfig(): FrogConfig {
     eyeColor: pick(EYE_COLOR_PALETTE).value,
     eyeStyle: pick(EYE_STYLES),
     pattern: pick(PATTERNS),
-    size: 30 + Math.floor(Math.random() * 60),
+    size: randomInt(30, 90),
     smile: Math.round((Math.random() * 2 - 1) * 10) / 10,
     accessories: shuffledAccessories.slice(0, accessoryCount).map((a) => a.id),
-    rarity: "common",
+    rarity: rollRarity(),
   };
 }

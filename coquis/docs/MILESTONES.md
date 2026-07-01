@@ -28,11 +28,11 @@ next begins.
 - [x] Keyboard-accessible swatches (WCAG §12) — verified roving-focus arrow-key nav, Enter-to-select, and visible focus rings
 - [x] Mobile bottom-sheet layout (desktop: inline aside; mobile: trigger + Radix-dialog-based bottom sheet)
 
-## M4 — Name, personality & rarity
-- [ ] Name generator + manual rename
-- [ ] Personality generator (all listed trait fields)
-- [ ] Golden/albino/rare-skin logic with defined odds
-- [ ] Single Randomize button rolls all of the above coherently
+## M4 — Name, personality & rarity ✅
+- [x] Name generator + manual rename (editable text field + dice reroll)
+- [x] Personality generator (trait, favorite food/weather/activity/place/time-of-day/flower, energy/curiosity/friendliness/bravery meters, voice pitch)
+- [x] Golden/albino/rare-skin logic with defined odds (90/7/3%), user-selectable via a Rare Skins tab, visually overrides body/belly/toe colors with a shimmer (golden) or glow (albino) VFX
+- [x] Single Randomize button rolls config (incl. rarity), name, and personality together coherently
 
 ## M5 — Full animation state machine
 - [ ] idle/blink/lookAround/stretch/croak/jump/sleep/tongue-flick implemented

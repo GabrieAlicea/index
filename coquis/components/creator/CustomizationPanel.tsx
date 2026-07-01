@@ -6,13 +6,14 @@ import { Slider } from "@/components/ui/Slider";
 import { ColorSwatchGrid } from "@/components/creator/ColorSwatchGrid";
 import { SegmentedControl } from "@/components/creator/SegmentedControl";
 import { AccessoryPicker } from "@/components/creator/AccessoryPicker";
+import { RarityPicker } from "@/components/creator/RarityPicker";
 import {
   BODY_COLOR_PALETTE,
   BELLY_COLOR_PALETTE,
   EYE_COLOR_PALETTE,
   TOE_COLOR_PALETTE,
 } from "@/data/colorPalettes";
-import type { BodyPattern, EyeStyle } from "@/types/frog";
+import type { BodyPattern, EyeStyle, Rarity } from "@/types/frog";
 
 const PATTERN_OPTIONS: { value: BodyPattern; label: string }[] = [
   { value: "solid", label: "Solid" },
@@ -26,6 +27,12 @@ const EYE_STYLE_OPTIONS: { value: EyeStyle; label: string }[] = [
   { value: "wide", label: "Wide" },
 ];
 
+const RARITY_ARTICLE_LABEL: Record<Rarity, string> = {
+  common: "",
+  golden: "a golden",
+  albino: "an albino",
+};
+
 export function CustomizationPanel() {
   const config = useBuilderStore((s) => s.config);
   const setField = useBuilderStore((s) => s.setField);
@@ -38,9 +45,15 @@ export function CustomizationPanel() {
           <TabsTrigger value="eyes">Eyes</TabsTrigger>
           <TabsTrigger value="belly">Belly</TabsTrigger>
           <TabsTrigger value="accessories">Accessories</TabsTrigger>
+          <TabsTrigger value="rarity">Rare</TabsTrigger>
         </TabsList>
 
         <TabsContent value="body" className="space-y-5">
+          {config.rarity !== "common" && (
+            <p className="rounded-md bg-sungold-500/10 px-3 py-2 text-xs font-body text-charcoal-800/80 dark:text-mist-100/80">
+              {`This coquí has ${RARITY_ARTICLE_LABEL[config.rarity]} rare skin, so its body color is set automatically. Pick "Common" under Rare Skins to customize colors again.`}
+            </p>
+          )}
           <ColorSwatchGrid
             label="Body color"
             options={BODY_COLOR_PALETTE}
@@ -71,6 +84,11 @@ export function CustomizationPanel() {
         </TabsContent>
 
         <TabsContent value="belly" className="space-y-5">
+          {config.rarity !== "common" && (
+            <p className="rounded-md bg-sungold-500/10 px-3 py-2 text-xs font-body text-charcoal-800/80 dark:text-mist-100/80">
+              {`This coquí has ${RARITY_ARTICLE_LABEL[config.rarity]} rare skin, so its belly and toe colors are set automatically.`}
+            </p>
+          )}
           <ColorSwatchGrid
             label="Belly color"
             options={BELLY_COLOR_PALETTE}
@@ -89,6 +107,13 @@ export function CustomizationPanel() {
           <AccessoryPicker
             value={config.accessories}
             onChange={(ids) => setField("accessories", ids)}
+          />
+        </TabsContent>
+
+        <TabsContent value="rarity">
+          <RarityPicker
+            value={config.rarity}
+            onChange={(value) => setField("rarity", value)}
           />
         </TabsContent>
       </Tabs>
@@ -124,7 +149,7 @@ export function CustomizationPanel() {
       </div>
 
       <p className="sr-only" aria-live="polite">
-        Editing {config.pattern} coquí, size {config.size}, {config.accessories.length} accessories equipped.
+        {`Editing ${config.rarity !== "common" ? `${config.rarity} ` : ""}${config.pattern} coquí, size ${config.size}, ${config.accessories.length} accessories equipped.`}
       </p>
     </div>
   );

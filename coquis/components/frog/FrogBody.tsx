@@ -1,13 +1,11 @@
 import { useId } from "react";
 import type { BodyPattern } from "@/types/frog";
+import { BODY_PATH } from "@/components/frog/bodyPath";
 
 export interface FrogBodyProps {
   bodyColor: string;
   pattern: BodyPattern;
 }
-
-const BODY_PATH =
-  "M30,140 C30,80 65,40 100,40 C135,40 170,80 170,140 C170,185 140,210 100,210 C60,210 30,185 30,140 Z";
 
 const SPOT_POSITIONS = [
   { cx: 62, cy: 90, r: 8 },

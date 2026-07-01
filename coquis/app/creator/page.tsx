@@ -3,6 +3,7 @@ import { LinkButton } from "@/components/ui/LinkButton";
 import { FrogCanvasStage } from "@/components/creator/FrogCanvasStage";
 import { CreatorControls } from "@/components/creator/CreatorControls";
 import { RandomizeButton } from "@/components/creator/RandomizeButton";
+import { NamePersonalityPanel } from "@/components/creator/NamePersonalityPanel";
 
 export default function CreatorPage() {
   return (
@@ -27,6 +28,7 @@ export default function CreatorPage() {
                 Back to the pond
               </LinkButton>
             </div>
+            <NamePersonalityPanel />
           </div>
 
           <CreatorControls />
