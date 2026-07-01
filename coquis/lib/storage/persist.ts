@@ -21,7 +21,7 @@ function createMemoryStorage(): StateStorage {
 export function safeLocalStorage(): StateStorage {
   if (typeof window === "undefined") return createMemoryStorage();
   try {
-    const testKey = "__frogies_storage_test__";
+    const testKey = "__coquis_storage_test__";
     window.localStorage.setItem(testKey, "1");
     window.localStorage.removeItem(testKey);
     return window.localStorage;

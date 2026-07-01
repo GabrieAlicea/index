@@ -17,7 +17,7 @@ export function HeroSection() {
         </h1>
 
         <p className="mt-6 max-w-xl text-balance font-body text-lg text-charcoal-800/80 dark:text-mist-100/80">
-          Frogies is a little digital rainforest inspired by Puerto Rico&apos;s
+          Coquis is a little digital rainforest inspired by Puerto Rico&apos;s
           coquí — customize your own frog, give it a personality, and release
           it into a living pond of moss, fireflies, and rain.
         </p>

@@ -1,11 +1,11 @@
-# Frogies — Milestone Tracker
+# Coquis — Milestone Tracker
 
 Tracked, checkable version of the milestone table in `ARCHITECTURE.md` §16.
 Implementation proceeds one milestone at a time; each is reviewed before the
 next begins.
 
 ## M0 — Scaffold & design system foundation ✅
-- [x] Next.js app boots at `/frogies` (isolated from repo-root site)
+- [x] Next.js app boots at `/coquis` (isolated from repo-root site)
 - [x] Tailwind tokens from ARCHITECTURE.md §8 wired into `tailwind.config.ts`
 - [x] Fredoka + Nunito loaded via `next/font/google`
 - [x] `ui/` primitives built on Radix: Button, Modal, Tabs, Slider, Toggle, Tooltip

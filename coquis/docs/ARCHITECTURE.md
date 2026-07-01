@@ -1,9 +1,9 @@
-# Frogies — Software Architecture Document
+# Coquis — Software Architecture Document
 
 **Status:** Draft for approval — no application code has been written yet.
-**Scope:** Everything needed to scaffold, build, and ship Frogies from zero.
+**Scope:** Everything needed to scaffold, build, and ship Coquis from zero.
 
-> Frogies is an original interactive experience where visitors design, name, and
+> Coquis is an original interactive experience where visitors design, name, and
 > release animated Puerto Rican Coquí frogs into a living rainforest scene. It is
 > inspired by the *interaction model* of drawafish.com (draw → customize → release
 > → collect) but every visual, sound, mechanic, and piece of content is original
@@ -18,10 +18,10 @@ site** at the root — a static "Handled" home-services landing page, deployed v
 GitHub Pages (`CNAME` → `handledcf.com`). That site must not be modified or
 deleted as part of this work.
 
-**Decision:** Frogies will live entirely under `/frogies` as a self-contained
+**Decision:** Coquis will live entirely under `/coquis` as a self-contained
 Next.js application with its own `package.json`, deployed independently (see
-§13 Deployment). Nothing under `/frogies` affects the GitHub Pages build at the
-repo root, and nothing at the repo root affects Frogies.
+§13 Deployment). Nothing under `/coquis` affects the GitHub Pages build at the
+repo root, and nothing at the repo root affects Coquis.
 
 ---
 
@@ -45,7 +45,7 @@ repo root, and nothing at the repo root affects Frogies.
 ## 2. Folder Structure
 
 ```
-frogies/
+coquis/
 ├── app/
 │   ├── layout.tsx                 # Root layout: providers, fonts, <html>/<body>
 │   ├── page.tsx                   # Landing page
@@ -247,9 +247,9 @@ selectors (`useCollectionStore(s => s.frogs)`) to avoid unnecessary re-renders.
 
 | Store | Persisted? | Responsibility |
 |---|---|---|
-| `builderStore` | Draft only (`localStorage` key `frogies:draft:v1`, restored on reload so users don't lose in-progress work) | Current in-progress `FrogConfig`, undo/redo stack for the creator, randomize action. |
-| `collectionStore` | Yes — `frogies:collection:v1` | Array of saved frogs, CRUD (`add`, `rename`, `toggleFavorite`, `remove`), enforces a sane max collection size with a friendly warning before hitting localStorage limits. |
-| `settingsStore` | Yes — `frogies:settings:v1` | Sound on/off, volume, reduced-motion opt-in override, time-of-day override, dark mode preference. |
+| `builderStore` | Draft only (`localStorage` key `coquis:draft:v1`, restored on reload so users don't lose in-progress work) | Current in-progress `FrogConfig`, undo/redo stack for the creator, randomize action. |
+| `collectionStore` | Yes — `coquis:collection:v1` | Array of saved frogs, CRUD (`add`, `rename`, `toggleFavorite`, `remove`), enforces a sane max collection size with a friendly warning before hitting localStorage limits. |
+| `settingsStore` | Yes — `coquis:settings:v1` | Sound on/off, volume, reduced-motion opt-in override, time-of-day override, dark mode preference. |
 | `audioStore` | No | Live `SoundManager` instance handle and current playback state; intentionally not persisted since audio nodes can't survive reload. |
 
 **Persistence layer:** `lib/storage/persist.ts` wraps `zustand/middleware`'s
@@ -503,8 +503,8 @@ small body text on a light background.
 
 ## 14. Deployment Strategy
 
-- **Frogies deploys as its own Vercel project**, with the Vercel "Root
-  Directory" setting pointed at `/frogies` in this repo. This keeps it fully
+- **Coquis deploys as its own Vercel project**, with the Vercel "Root
+  Directory" setting pointed at `/coquis` in this repo. This keeps it fully
   isolated from the GitHub Pages build serving the existing site at the repo
   root (§0) — the two deployments never touch the same files or build
   pipeline.
@@ -512,9 +512,9 @@ small body text on a light background.
   auto-deploys to production once the architecture and each milestone are
   approved.
 - **CI (future milestone, tracked in roadmap):** GitHub Actions workflow
-  scoped to `frogies/**` changes only, running typecheck, lint, unit tests,
+  scoped to `coquis/**` changes only, running typecheck, lint, unit tests,
   and Playwright smoke tests before merge.
-- **Custom domain:** to be decided by the user (a `frogies.<domain>` subdomain
+- **Custom domain:** to be decided by the user (a `coquis.<domain>` subdomain
   or standalone domain) — intentionally not assumed here since it doesn't
   affect the architecture.
 
@@ -549,12 +549,12 @@ stay consistent with this architecture rather than bolted on:
 ## 16. Milestones
 
 Each milestone is small, independently shippable/reviewable, and has explicit
-acceptance criteria. See `frogies/docs/MILESTONES.md` for the tracked version
+acceptance criteria. See `coquis/docs/MILESTONES.md` for the tracked version
 of this list.
 
 | # | Milestone | Acceptance criteria |
 |---|---|---|
-| M0 | **Scaffold & design system foundation** | Next.js app boots at `/frogies`; Tailwind tokens (§8) wired in; Fredoka/Nunito loaded; `ui/` primitives (Button, Modal, Tabs, Slider, Toggle, Tooltip) built on Radix and themed; dark mode toggle works. |
+| M0 | **Scaffold & design system foundation** | Next.js app boots at `/coquis`; Tailwind tokens (§8) wired in; Fredoka/Nunito loaded; `ui/` primitives (Button, Modal, Tabs, Slider, Toggle, Tooltip) built on Radix and themed; dark mode toggle works. |
 | M1 | **Landing page** | Animated hero with `RainforestScene` (fog + leaf sway only, no rain/fireflies yet), headline, primary CTA to `/creator`, ambience toggle (silent placeholder audio ok), responsive down to 375px, Lighthouse Perf ≥ 90. |
 | M2 | **Frog Renderer core** | `FrogRenderer` assembles from layered SVG parts given a static `FrogConfig`; idle breathing + blink animation running at 60fps; component is `React.memo`'d and covered by a unit test asserting it renders all layers. |
 | M3 | **Creator: customization panel** | All customization axes (body/pattern/eyes/eye color/belly/toe color/size/smile/accessories) wired live to `FrogRenderer` via `builderStore`; keyboard-accessible swatches per §12; mobile bottom-sheet layout works. |
@@ -574,7 +574,7 @@ of this list.
 A few choices are intentionally left for explicit confirmation before or
 during implementation, since they affect scope/cost more than architecture:
 
-1. **Domain** — where should Frogies live in production (subdomain of an
+1. **Domain** — where should Coquis live in production (subdomain of an
    existing domain, or a new one)?
 2. **Coquí audio** — synthesize/commission original sound effects, or license
    real field recordings? (Affects M9 scope and `public/audio/coqui/CREDITS.md`.)

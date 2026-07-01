@@ -17,7 +17,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Frogies — Create & release your own Coquí",
+  title: "Coquis — Create & release your own Coquí",
   description:
     "Design, name, and release your own animated Puerto Rican Coquí frog into a living rainforest.",
 };

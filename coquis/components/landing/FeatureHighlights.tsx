@@ -28,7 +28,7 @@ export function FeatureHighlights() {
       className="mx-auto max-w-5xl scroll-mt-8 px-6 py-20"
     >
       <h2 className="text-center font-display text-3xl font-semibold text-canopy-700 dark:text-leaf-300 sm:text-4xl">
-        How Frogies works
+        How Coquis works
       </h2>
       <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {FEATURES.map((feature) => (

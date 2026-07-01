@@ -15,7 +15,7 @@ export const useSettingsStore = create<SettingsState>()(
       toggleSound: () => set((state) => ({ soundEnabled: !state.soundEnabled })),
     }),
     {
-      name: "frogies:settings:v1",
+      name: "coquis:settings:v1",
       version: 1,
       storage: createJSONStorage(() => safeLocalStorage()),
     }

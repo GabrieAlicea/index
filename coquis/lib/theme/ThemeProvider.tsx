@@ -18,7 +18,7 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = "frogies:theme:v1";
+const STORAGE_KEY = "coquis:theme:v1";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";
