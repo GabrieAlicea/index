@@ -18,6 +18,8 @@ import type { FrogConfig } from "@/types/frog";
 export interface FrogRendererProps {
   config: FrogConfig;
   className?: string;
+  /** Fires when the jump pose animation finishes — e.g. to trigger a water ripple. */
+  onJumpLand?: () => void;
 }
 
 const ALBINO_GLOW = [
@@ -52,7 +54,7 @@ const POSE_VARIANTS: Variants = {
   tongueFlick: { y: 0, scaleX: 1, scaleY: 1, transition: { duration: 0.4 } },
 };
 
-function FrogRendererComponent({ config, className }: FrogRendererProps) {
+function FrogRendererComponent({ config, className, onJumpLand }: FrogRendererProps) {
   const { activity, blinking, triggerCroak } = useFrogAnimationState();
   const scale = 0.7 + (config.size / 100) * 0.6;
 
@@ -79,6 +81,9 @@ function FrogRendererComponent({ config, className }: FrogRendererProps) {
             variants={POSE_VARIANTS}
             animate={activity}
             initial="idle"
+            onAnimationComplete={(definition) => {
+              if (definition === "jumping") onJumpLand?.();
+            }}
           >
             <motion.g
               style={{ transformOrigin: POSE_ORIGIN }}

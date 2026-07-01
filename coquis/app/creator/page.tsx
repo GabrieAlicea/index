@@ -4,6 +4,8 @@ import { FrogCanvasStage } from "@/components/creator/FrogCanvasStage";
 import { CreatorControls } from "@/components/creator/CreatorControls";
 import { RandomizeButton } from "@/components/creator/RandomizeButton";
 import { NamePersonalityPanel } from "@/components/creator/NamePersonalityPanel";
+import { TimeOfDaySelector } from "@/components/environment/TimeOfDaySelector";
+import { AmbienceToggle } from "@/components/audio/AmbienceToggle";
 
 export default function CreatorPage() {
   return (
@@ -22,6 +24,10 @@ export default function CreatorPage() {
         <div className="mt-8 flex flex-col items-center gap-6 lg:flex-row lg:items-start lg:justify-center">
           <div className="w-full max-w-md space-y-4">
             <FrogCanvasStage />
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              <TimeOfDaySelector />
+              <AmbienceToggle />
+            </div>
             <div className="flex justify-center gap-3">
               <RandomizeButton />
               <LinkButton href="/" variant="ghost">

@@ -8,10 +8,10 @@ export interface CanvasEngine {
   renderStatic?: () => void;
 }
 
-export type CanvasEngineFactory = (
+export type CanvasEngineFactory<T extends CanvasEngine = CanvasEngine> = (
   ctx: CanvasRenderingContext2D,
   quality: QualityTier
-) => CanvasEngine;
+) => T;
 
 export function getQualityTier(): QualityTier {
   if (typeof navigator === "undefined" || typeof window === "undefined") {

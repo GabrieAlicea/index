@@ -10,13 +10,18 @@ import { getQualityTier } from "@/lib/canvas/types";
  * pauses on tab-hidden and prefers-reduced-motion, and scales particle
  * density to a device quality tier. `createEngine` should be a stable
  * reference (a module-level factory like `createFogEngine`).
+ *
+ * Pass `externalEngineRef` when a caller needs to reach the live engine
+ * instance for methods beyond the base CanvasEngine interface (e.g. the
+ * ripple engine's `emit(x, y)`) — the hook keeps it pointed at the current
+ * engine for as long as it's mounted.
  */
-export function useCanvasLoop(
+export function useCanvasLoop<T extends CanvasEngine = CanvasEngine>(
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  createEngine: CanvasEngineFactory
+  createEngine: CanvasEngineFactory<T>,
+  externalEngineRef?: React.MutableRefObject<T | null>
 ) {
   const reducedMotion = useReducedMotion();
-  const engineRef = useRef<CanvasEngine | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +34,7 @@ export function useCanvasLoop(
     const dpr = window.devicePixelRatio || 1;
     const quality = getQualityTier();
     const engine = createEngine(ctx, quality);
-    engineRef.current = engine;
+    if (externalEngineRef) externalEngineRef.current = engine;
 
     const resize = () => {
       const { clientWidth, clientHeight } = parent;
@@ -69,6 +74,7 @@ export function useCanvasLoop(
       engine.stop();
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
+      if (externalEngineRef) externalEngineRef.current = null;
     };
-  }, [canvasRef, createEngine, reducedMotion]);
+  }, [canvasRef, createEngine, reducedMotion, externalEngineRef]);
 }

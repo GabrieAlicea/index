@@ -4,7 +4,7 @@ import { useBuilderStore } from "@/stores/builderStore";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { Slider } from "@/components/ui/Slider";
 import { ColorSwatchGrid } from "@/components/creator/ColorSwatchGrid";
-import { SegmentedControl } from "@/components/creator/SegmentedControl";
+import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { AccessoryPicker } from "@/components/creator/AccessoryPicker";
 import { RarityPicker } from "@/components/creator/RarityPicker";
 import {

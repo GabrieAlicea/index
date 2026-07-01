@@ -39,11 +39,11 @@ next begins.
 - [x] Tap-to-croak trigger (FrogRenderer is now an accessible button; click/keyboard-activate interrupts and forces the croak pose)
 - [x] Reduced-motion fallback verified — confirmed at runtime (not assumed) that both the ambient activity cycling and the continuous breathing loop stay fully static under `prefers-reduced-motion: reduce`, while the explicit tap-to-croak still gives instant (non-animated) feedback
 
-## M6 — Environment system
-- [ ] Canvas engines: fog, leaves, fireflies, rain, water ripples
-- [ ] Day/night/sunset cycle with matching sky palette
-- [ ] Wind affects leaf sway
-- [ ] Quality tiers verified on low-end device profile
+## M6 — Environment system ✅
+- [x] Canvas engines: fog (M1), leaves (ambient drifting particles + existing CSS decorative sway), fireflies (dusk/night), rain (tied to the ambience toggle), water ripples (event-driven, triggered by the frog's jump landing)
+- [x] Day/night/sunset cycle with matching sky palette — user-selectable Time of Day control (Day/Dusk/Night), persisted in settingsStore, with matching gradients and sun/moon/stars decorations
+- [x] Wind affects leaf sway — rain toggles a faster/windier CSS sway speed on the decorative foreground leaves
+- [x] Quality tiers verified on low-end device profile — unit tests assert low < medium < high draw-call counts for every engine (fog/firefly/rain/leaf-particle) via a mock canvas context, plus a real-browser check confirming the low/high tier heuristic itself picks correctly for a narrow-viewport/low-core profile vs desktop
 
 ## M7 — Collection system
 - [ ] `collectionStore` persists with schema versioning
