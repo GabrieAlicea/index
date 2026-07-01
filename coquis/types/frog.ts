@@ -18,6 +18,15 @@ export interface FrogConfig {
   rarity: Rarity;
 }
 
+export interface SavedFrog {
+  id: string;
+  name: string;
+  config: FrogConfig;
+  personality: Personality;
+  favorite: boolean;
+  createdAt: number;
+}
+
 export interface Personality {
   /** Headline personality word, e.g. "Curious", "Bold". */
   trait: string;

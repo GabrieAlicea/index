@@ -4,6 +4,8 @@ import { FrogCanvasStage } from "@/components/creator/FrogCanvasStage";
 import { CreatorControls } from "@/components/creator/CreatorControls";
 import { RandomizeButton } from "@/components/creator/RandomizeButton";
 import { NamePersonalityPanel } from "@/components/creator/NamePersonalityPanel";
+import { SaveToCollectionButton } from "@/components/creator/SaveToCollectionButton";
+import { FunFact } from "@/components/creator/FunFact";
 import { TimeOfDaySelector } from "@/components/environment/TimeOfDaySelector";
 import { AmbienceToggle } from "@/components/audio/AmbienceToggle";
 
@@ -28,13 +30,15 @@ export default function CreatorPage() {
               <TimeOfDaySelector />
               <AmbienceToggle />
             </div>
-            <div className="flex justify-center gap-3">
+            <div className="flex flex-wrap justify-center gap-3">
               <RandomizeButton />
-              <LinkButton href="/" variant="ghost">
-                Back to the pond
+              <SaveToCollectionButton />
+              <LinkButton href="/gallery" variant="ghost">
+                View your pond
               </LinkButton>
             </div>
             <NamePersonalityPanel />
+            <FunFact />
           </div>
 
           <CreatorControls />
