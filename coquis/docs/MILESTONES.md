@@ -18,10 +18,10 @@ next begins.
 - [x] Responsive down to 375px
 - [x] Lighthouse Performance ≥ 90 (100 desktop, 97 mobile-throttled; accessibility/best-practices/SEO also 100)
 
-## M2 — Frog Renderer core
-- [ ] `FrogRenderer` assembles layered SVG parts from a static `FrogConfig`
-- [ ] Idle breathing + blink animation at 60fps
-- [ ] `React.memo`'d, unit test asserts all layers render
+## M2 — Frog Renderer core ✅
+- [x] `FrogRenderer` assembles layered SVG parts from a static `FrogConfig`
+- [x] Idle breathing + blink animation at 60fps
+- [x] `React.memo`'d, unit test asserts all layers render
 
 ## M3 — Creator: customization panel
 - [ ] All customization axes wired live via `builderStore`
