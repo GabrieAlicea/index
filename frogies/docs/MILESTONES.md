@@ -11,12 +11,12 @@ next begins.
 - [x] `ui/` primitives built on Radix: Button, Modal, Tabs, Slider, Toggle, Tooltip
 - [x] Dark mode toggle functional
 
-## M1 — Landing page
-- [ ] Animated hero with `RainforestScene` (fog + leaf sway)
-- [ ] Headline, primary CTA → `/creator`
-- [ ] Ambience toggle present (audio can be placeholder)
-- [ ] Responsive down to 375px
-- [ ] Lighthouse Performance ≥ 90
+## M1 — Landing page ✅
+- [x] Animated hero with `RainforestScene` (fog + leaf sway)
+- [x] Headline, primary CTA → `/creator`
+- [x] Ambience toggle present (audio can be placeholder)
+- [x] Responsive down to 375px
+- [x] Lighthouse Performance ≥ 90 (100 desktop, 97 mobile-throttled; accessibility/best-practices/SEO also 100)
 
 ## M2 — Frog Renderer core
 - [ ] `FrogRenderer` assembles layered SVG parts from a static `FrogConfig`

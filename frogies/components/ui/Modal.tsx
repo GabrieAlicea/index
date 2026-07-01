@@ -60,7 +60,7 @@ export function Modal({
                 <Dialog.Close asChild>
                   <button
                     aria-label="Close dialog"
-                    className="absolute right-4 top-4 rounded-pill p-1 text-charcoal-800/60 hover:bg-leaf-100 focus-visible:focus-ring dark:text-mist-100/60 dark:hover:bg-canopy-900"
+                    className="absolute right-4 top-4 rounded-pill p-1 text-charcoal-800/70 hover:bg-leaf-100 focus-visible:focus-ring dark:text-mist-100/70 dark:hover:bg-canopy-900"
                   >
                     ✕
                   </button>

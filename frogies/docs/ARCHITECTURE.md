@@ -469,10 +469,15 @@ small body text on a light background.
 
 ## 13. Performance Optimization Plan
 
-- **Code splitting:** `CreatorPage`'s customization panel and all canvas
-  engines are loaded via `next/dynamic(() => import(...), { ssr: false })`
-  since they touch `window`/`canvas` and aren't needed for the landing page's
-  first paint.
+- **Code splitting:** canvas-driving components (e.g. `FogCanvas`) are plain
+  Client Components (`"use client"`) whose browser-API access is confined to
+  `useEffect`/event handlers, so they render an inert `<canvas>` during SSR
+  with no special handling needed. (`next/dynamic(..., { ssr: false })` was
+  the original plan, but App Router Server Components can't use `ssr: false`
+  dynamic imports at all — it's disallowed at build time — so a plain client
+  component achieves the same "no window access during SSR" goal without it.)
+  `CreatorPage`'s customization panel will still be split via ordinary route-
+  level code splitting once built in M3.
 - **Audio** is fetched lazily on first interaction, never bundled or
   preloaded eagerly.
 - **SVG-as-components** instead of raster images for all frog parts — no

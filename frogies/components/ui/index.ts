@@ -1,4 +1,5 @@
 export { Button } from "./Button";
+export { LinkButton } from "./LinkButton";
 export { Modal } from "./Modal";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./Tabs";
 export { Slider } from "./Slider";
