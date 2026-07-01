@@ -34,10 +34,10 @@ next begins.
 - [x] Golden/albino/rare-skin logic with defined odds (90/7/3%), user-selectable via a Rare Skins tab, visually overrides body/belly/toe colors with a shimmer (golden) or glow (albino) VFX
 - [x] Single Randomize button rolls config (incl. rarity), name, and personality together coherently
 
-## M5 — Full animation state machine
-- [ ] idle/blink/lookAround/stretch/croak/jump/sleep/tongue-flick implemented
-- [ ] Tap-to-croak trigger
-- [ ] Reduced-motion fallback verified
+## M5 — Full animation state machine ✅
+- [x] idle/blink/lookAround/stretch/croak/jump/sleep/tongue-flick implemented (weighted-random cycling in `useFrogAnimationState`, per-state Framer Motion variants)
+- [x] Tap-to-croak trigger (FrogRenderer is now an accessible button; click/keyboard-activate interrupts and forces the croak pose)
+- [x] Reduced-motion fallback verified — confirmed at runtime (not assumed) that both the ambient activity cycling and the continuous breathing loop stay fully static under `prefers-reduced-motion: reduce`, while the explicit tap-to-croak still gives instant (non-animated) feedback
 
 ## M6 — Environment system
 - [ ] Canvas engines: fog, leaves, fireflies, rain, water ripples

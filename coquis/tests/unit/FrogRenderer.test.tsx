@@ -4,12 +4,16 @@ import { FrogRenderer } from "@/components/frog/FrogRenderer";
 import { DEFAULT_FROG_CONFIG } from "@/lib/frog/frogConfig";
 
 describe("FrogRenderer", () => {
-  it("renders an accessible svg with all frog layers", () => {
+  it("renders as an accessible, tappable button wrapping a decorative svg", () => {
     const { container } = render(<FrogRenderer config={DEFAULT_FROG_CONFIG} />);
+
+    const button = container.querySelector("button");
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute("aria-label", "Tap to hear your Coquí croak");
 
     const svg = container.querySelector("svg");
     expect(svg).toBeInTheDocument();
-    expect(svg).toHaveAttribute("aria-label", "Your customized Coquí");
+    expect(svg).toHaveAttribute("aria-hidden", "true");
 
     // FrogBelly + 4x FrogToes = 5 ellipses
     expect(container.querySelectorAll("ellipse")).toHaveLength(5);
@@ -17,6 +21,8 @@ describe("FrogRenderer", () => {
     expect(container.querySelectorAll("path")).toHaveLength(3);
     // FrogEyes: 2 sclera + 2 pupil circles
     expect(container.querySelectorAll("circle")).toHaveLength(4);
+    // FrogTongue is always in the DOM (hidden via scale/opacity when not flicking)
+    expect(container.querySelectorAll("rect")).toHaveLength(1);
   });
 
   it("renders pattern overlays and accessories field without crashing", () => {
@@ -48,8 +54,15 @@ describe("FrogRenderer", () => {
       />
     );
 
-    // Neither accessory adds a <rect>; the backpack does (2 rects).
-    expect(none.querySelectorAll("rect")).toHaveLength(0);
-    expect(two.querySelectorAll("rect")).toHaveLength(2);
+    // 1 tongue rect + 0 accessory rects
+    expect(none.querySelectorAll("rect")).toHaveLength(1);
+    // 1 tongue rect + 2 backpack rects
+    expect(two.querySelectorAll("rect")).toHaveLength(3);
+  });
+
+  it("triggers a croak on click without throwing", async () => {
+    const { getByRole } = render(<FrogRenderer config={DEFAULT_FROG_CONFIG} />);
+    const button = getByRole("button", { name: "Tap to hear your Coquí croak" });
+    button.click();
   });
 });
