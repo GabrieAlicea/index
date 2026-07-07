@@ -671,7 +671,7 @@ Three channels, orchestrated from one internal `notify(profile_id, type, payload
 Double-blind, Airbnb-style: both `reviews` rows exist as soon as either party submits, but `visible_at` stays `null` (hidden from the other party) until **both submit or a 14-day window elapses**, at which point a scheduled function stamps `visible_at = now()` on both simultaneously. This prevents retaliatory/anchored ratings. A trigger on `reviews` insert recomputes `mechanic_profiles.rating_avg`/`rating_count` (customer-side rating aggregate is out of scope for V1 display but stored the same way for future use, e.g. flagging abusive customers).
 
 ### 8.8 Admin Permissions
-`profiles.role` drives both RLS and UI gating: `admin` (full access), `support_agent` (tickets, messages, read-only on jobs/disputes, cannot touch Stripe/payouts or approve mechanics), `finance` (revenue, payouts, refunds, cannot approve mechanics or manage CMS). Every privileged mutation (approve mechanic, issue refund, edit pricing, disable a coupon) is wrapped in a `security definer` function that checks the caller's role server-side and writes to `admin_audit_log` — the audit log is append-only (no UPDATE/DELETE policy at all) so it can't be tampered with by a compromised admin session.
+V1 ships with a single `admin` role (full access) per the confirmed decision below; `support_agent` and `finance` are modeled in the schema's `user_role` enum but unused until the team grows into them, at which point it's a permissions-narrowing change, not a schema migration. Every privileged mutation (approve mechanic, issue refund, edit pricing, disable a coupon) is wrapped in a `security definer` function that checks the caller's role server-side and writes to `admin_audit_log` — the audit log is append-only (no UPDATE/DELETE policy at all) so it can't be tampered with by a compromised admin session.
 
 ---
 
@@ -896,17 +896,17 @@ supabase/
 
 ---
 
-## 19. Questions / Assumptions Requiring Your Input
+## 19. Decisions (confirmed 2026-07-07)
 
-1. **Background checks & insurance verification** — which vendor (e.g., Checkr) should we integrate, or is this manual admin review only for V1?
-2. **Pricing model confirmation** — confirm the hybrid model (fixed catalog price + quote flow for custom repairs) matches your intent, and who sets catalog prices platform-wide vs. per-mechanic customization.
-3. **Payout cadence** — default Stripe rolling payout (T+2) acceptable for V1, with instant payout as a later paid feature?
-4. **Launch metros** — confirm Tampa/Orlando/Miami as the first three, or a different initial set/order.
-5. **Cancellation & refund policy** — what cancellation window is free vs. penalized, for both customer- and mechanic-initiated cancellations?
-6. **Data retention** — how long do we retain VIN/license/insurance documents after a mechanic is rejected or a customer closes their account (legal/compliance input needed)?
-7. **Native app timing** — is a PWA acceptable for launch, or is native iOS/Android a V1 hard requirement (this materially changes Phase 1–3 scope)?
-8. **Support staffing model** — is `support_agent`/`finance` role separation reflecting your actual planned org, or should permissions be modeled differently?
+1. **Background checks & insurance verification** — manual admin review for V1 (no third-party vendor integration yet). `mechanic_documents` + the approval queue are the mechanism; a Checkr-style integration is a fast-follow, not a schema change (documents already model `status`/`reviewed_by`).
+2. **Pricing model** — hybrid, as proposed: fixed platform-set prices for catalog services (oil change, brakes, battery, etc.); mechanic- or admin-issued quotes for custom/variable jobs. `services.price_type` (`fixed`/`estimate`/`quote_only`) already models this.
+3. **Payouts** — standard Stripe Connect rolling payout (T+2 business days) for V1; instant payouts ship later as a paid feature (roadmap item, no schema change needed — `payouts.status`/`stripe_transfer_id` already generic).
+4. **Launch order** — Orlando first, then Tampa, then Miami. Service area remains a data-driven radius/polygon per metro (not hardcoded), so sequencing is an ops/config rollout, not an engineering dependency.
+5. **Cancellation policy** — free cancellation while a job is `searching`/`scheduled` (pre-dispatch acceptance); a cancellation fee applies once a mechanic has accepted and is `en_route`. Mechanic-initiated cancellations are restricted to valid reasons (a required `cancellation_reason` on decline/cancel, reviewed by admin if a pattern emerges — repeat unjustified cancellations feed into approval-status review, not an automated ban in V1). This refines `jobs.status`/`cancellation_reason` usage: the cancellation-fee branch triggers a partial capture rather than voiding the payment authorization outright.
+6. **Data retention** — documents and PII are retained only while an account is active, with deletion/anonymization on account closure or mechanic rejection, subject to any legally required minimum retention (e.g., financial/tax records). Exact retention windows per document type are pending legal review before launch; the schema already isolates sensitive documents (`mechanic_documents`) from core profile data so a retention job can purge them independently without touching job history.
+7. **Platform for V1** — installable PWA first (web push, responsive, add-to-home-screen); native iOS/Android apps are a post-launch roadmap item once traction justifies the investment.
+8. **Admin roles** — a single `admin` role for V1 (no support/finance split yet). The `user_role` enum still reserves `support_agent`/`finance` values so introducing them later is a permissions change, not a migration.
 
 ---
 
-*Once these are confirmed (or you say "proceed with the stated assumptions"), implementation begins at Phase 1.*
+*Decisions confirmed — implementation is now underway starting at Phase 1 (Foundation).*
