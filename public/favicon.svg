@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="16" fill="#08090D"/>
+  <rect width="64" height="64" rx="16" fill="url(#revvy-grad)" fill-opacity="0.9"/>
+  <path d="M20 40.5V24.8C20 23.8 20.8 23 21.8 23H33.6C38.2 23 41.5 25.9 41.5 30.1C41.5 33.2 39.7 35.5 37 36.5L42 40.5H36.4L32.1 37H25.3V40.5C25.3 41 24.9 41.4 24.4 41.4H21C20.4 41.4 20 41 20 40.5Z" fill="#F5F6F8"/>
+  <path d="M25.3 27.4H33.1C35 27.4 36.2 28.4 36.2 30.1C36.2 31.8 35 32.8 33.1 32.8H25.3V27.4Z" fill="#08090D"/>
+  <defs>
+    <linearGradient id="revvy-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2E6BFF"/>
+      <stop offset="1" stop-color="#0B2A7A"/>
+    </linearGradient>
+  </defs>
+</svg>
