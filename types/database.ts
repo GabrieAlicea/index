@@ -162,6 +162,7 @@ export interface Database {
           city: string;
           state: string;
           postal_code: string;
+          location: unknown;
           is_default: boolean;
           created_at: string;
         },
@@ -173,6 +174,7 @@ export interface Database {
           city: string;
           state: string;
           postal_code: string;
+          location: string;
           is_default?: boolean;
         }
       >;
