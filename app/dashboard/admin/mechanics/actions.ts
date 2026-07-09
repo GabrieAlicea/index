@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
+import { sendMechanicDecisionEmail } from "@/lib/notifications/email";
 import { createClient } from "@/lib/supabase/server";
 import type { MechanicApprovalStatus } from "@/types/database";
 
@@ -21,6 +22,23 @@ export async function reviewMechanic(
   });
 
   if (error) return { error: error.message };
+
+  if (decision === "approved" || decision === "rejected" || decision === "needs_more_info" || decision === "suspended") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("full_name, email")
+      .eq("id", mechanicId)
+      .single();
+
+    if (profile) {
+      await sendMechanicDecisionEmail({
+        to: profile.email,
+        mechanicName: profile.full_name,
+        decision,
+        reason,
+      });
+    }
+  }
 
   revalidatePath("/dashboard/admin/mechanics");
   revalidatePath(`/dashboard/admin/mechanics/${mechanicId}`);

@@ -10,8 +10,8 @@ This README covers local setup only.
 ## Stack
 
 Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS v4 · Supabase
-(Postgres + PostGIS + Auth + Realtime + Storage) · Framer Motion · Zod · TanStack Query ·
-Zustand.
+(Postgres + PostGIS + Auth + Realtime + Storage) · Framer Motion · Zod · Leaflet +
+OpenStreetMap (maps/geocoding) · Resend (email) · Stripe (payments, partial).
 
 ## Prerequisites
 
@@ -59,20 +59,30 @@ Zustand.
 
 ## What's implemented vs. scaffolded
 
-This codebase currently covers **Phase 1 (Foundation)** of the roadmap in the PRD:
+This codebase currently covers **Phase 1 (Foundation)** of the roadmap in the PRD, plus a
+few Phase 2 pieces pulled forward:
 
 - ✅ Full marketing site (SEO-ready, static)
 - ✅ Auth (email/password signup + login, role-aware) via Supabase Auth
 - ✅ Database schema + RLS policies + security-definer RPCs (`accept_job`, `cancel_job`,
-  `approve_mechanic`)
+  `approve_mechanic`), deployed to a live Supabase project
 - ✅ Customer, mechanic, and admin dashboards wired to real Supabase queries and Server
   Actions (vehicles, availability, mechanic approvals, etc.)
 - ✅ A real end-to-end booking flow (`/book`) that creates a job row in the database
+- ✅ **Geocoding & maps** — addresses are geocoded via OpenStreetMap's free Nominatim API
+  (`lib/maps/geocode.ts`), and job/tracking pages render a real Leaflet + OSM map
+  (`components/maps/`). No API key required. Nominatim's unauthenticated tier caps at
+  ~1 request/second — fine at launch scale, revisit if volume grows.
+- ✅ **Transactional email** via Resend — booking confirmations and mechanic
+  approval/rejection decisions (`lib/notifications/email.ts`). Sends from Resend's shared
+  `onboarding@resend.dev` sender until you verify your own domain in the Resend dashboard.
+- 🚧 **Stripe** — only `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is configured. There's no
+  server-side charge or Connect payout flow yet because that requires a **secret key**
+  (`STRIPE_SECRET_KEY`), which hasn't been provided. Nothing can move money until that
+  exists.
 - 🚧 **Not yet implemented** (see `docs/REVVY_PRD.md` §17 for the full roadmap): the
-  dispatch wave engine, Stripe Connect payments/payouts, Google Maps
-  geocoding/directions/live tracking, Twilio/Resend notifications, and the double-blind
-  review reveal job. Booking currently geocodes new addresses to a fixed placeholder point
-  (see the comment in `app/(booking)/book/actions.ts`) until Google Maps integration ships.
+  dispatch wave engine (matching a job to a specific nearby mechanic automatically),
+  Twilio SMS notifications, and the double-blind review reveal job.
 
 ## Project structure
 

@@ -2,15 +2,12 @@
 
 import { redirect } from "next/navigation";
 
+import { sendBookingConfirmationEmail } from "@/lib/notifications/email";
+import { geocodeAddress, toPointWkt } from "@/lib/maps/geocode";
 import { createClient } from "@/lib/supabase/server";
 import { CreateBookingSchema } from "@/lib/validations/booking";
 
 export type BookingFormState = { error?: string } | null;
-
-// Placeholder until Google Geocoding ships (Phase 2/3, see docs/REVVY_PRD.md
-// §8.5). Defaults new addresses to central Orlando so PostGIS dispatch
-// queries have a real point to work with instead of failing NOT NULL.
-const FALLBACK_POINT = "POINT(-81.3792 28.5383)";
 
 export async function createBooking(input: unknown): Promise<BookingFormState> {
   const parsed = CreateBookingSchema.safeParse(input);
@@ -35,6 +32,8 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
     if (!newAddress) {
       return { error: "Provide a service address." };
     }
+
+    const coords = await geocodeAddress(newAddress);
     const { data: address, error: addressError } = await supabase
       .from("addresses")
       .insert({
@@ -43,7 +42,9 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
         city: newAddress.city,
         state: newAddress.state,
         postal_code: newAddress.postalCode,
-        location: FALLBACK_POINT,
+        location: toPointWkt(coords),
+        lat: coords?.lat ?? null,
+        lng: coords?.lon ?? null,
       })
       .select("id")
       .single();
@@ -58,7 +59,7 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
   // never gets to dictate what it pays (see docs/REVVY_PRD.md §14 Security).
   const { data: services, error: servicesError } = await supabase
     .from("services")
-    .select("id, base_price")
+    .select("id, name, base_price")
     .in("id", serviceIds);
 
   if (servicesError || !services || services.length === 0) {
@@ -99,6 +100,24 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
     status: schedulingType === "asap" ? "searching" : "scheduled",
     changed_by: user.id,
   });
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, email")
+    .eq("id", user.id)
+    .single();
+
+  if (profile) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    await sendBookingConfirmationEmail({
+      to: profile.email,
+      customerName: profile.full_name,
+      serviceNames: services.map((s) => s.name),
+      total: subtotal,
+      schedulingType,
+      appointmentUrl: `${siteUrl}/dashboard/customer/appointments/${job.id}`,
+    });
+  }
 
   redirect(`/dashboard/customer/appointments/${job.id}`);
 }

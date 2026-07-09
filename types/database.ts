@@ -163,6 +163,8 @@ export interface Database {
           state: string;
           postal_code: string;
           location: unknown;
+          lat: number | null;
+          lng: number | null;
           is_default: boolean;
           created_at: string;
         },
@@ -175,6 +177,8 @@ export interface Database {
           state: string;
           postal_code: string;
           location: string;
+          lat?: number | null;
+          lng?: number | null;
           is_default?: boolean;
         }
       >;

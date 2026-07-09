@@ -4,6 +4,7 @@ import { MapPin, MessageCircle, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { MapView } from "@/components/maps/map-view";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
@@ -33,20 +34,42 @@ export default async function AppointmentDetailPage({
 
   const { data: job } = await supabase
     .from("jobs")
-    .select("id, status, total, subtotal, platform_fee, created_at")
+    .select("id, status, total, subtotal, platform_fee, created_at, address_id")
     .eq("id", id)
     .eq("customer_id", user!.id)
     .single();
 
   if (!job) notFound();
 
+  const { data: address } = await supabase
+    .from("addresses")
+    .select("lat, lng, line1")
+    .eq("id", job.address_id)
+    .single();
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-      <Card className="flex min-h-[420px] items-center justify-center bg-surface">
-        <div className="text-center text-text-faint">
-          <MapPin className="mx-auto size-8" />
-          <p className="mt-2 text-sm">Live map appears here once a mechanic is en route.</p>
-        </div>
+      <Card className="min-h-[420px] overflow-hidden bg-surface">
+        {address?.lat && address?.lng ? (
+          <MapView
+            markers={[
+              {
+                id: "address",
+                lat: address.lat,
+                lng: address.lng,
+                label: address.line1,
+                color: "primary",
+              },
+            ]}
+          />
+        ) : (
+          <div className="flex h-full min-h-[420px] items-center justify-center text-center text-text-faint">
+            <div>
+              <MapPin className="mx-auto size-8" />
+              <p className="mt-2 text-sm">Location pending.</p>
+            </div>
+          </div>
+        )}
       </Card>
 
       <div className="flex flex-col gap-4">

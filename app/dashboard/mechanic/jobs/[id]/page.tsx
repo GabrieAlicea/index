@@ -4,6 +4,7 @@ import { MapPin, Navigation } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { MapView } from "@/components/maps/map-view";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
@@ -19,20 +20,42 @@ export default async function MechanicJobDetailPage({
 
   const { data: job } = await supabase
     .from("jobs")
-    .select("id, status, total, created_at")
+    .select("id, status, total, created_at, address_id")
     .eq("id", id)
     .eq("mechanic_id", user!.id)
     .single();
 
   if (!job) notFound();
 
+  const { data: address } = await supabase
+    .from("addresses")
+    .select("lat, lng, line1")
+    .eq("id", job.address_id)
+    .single();
+
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <Card className="flex min-h-[420px] items-center justify-center bg-surface">
-        <div className="text-center text-text-faint">
-          <MapPin className="mx-auto size-8" />
-          <p className="mt-2 text-sm">Customer location and navigation appear here.</p>
-        </div>
+      <Card className="min-h-[420px] overflow-hidden bg-surface">
+        {address?.lat && address?.lng ? (
+          <MapView
+            markers={[
+              {
+                id: "customer",
+                lat: address.lat,
+                lng: address.lng,
+                label: address.line1,
+                color: "success",
+              },
+            ]}
+          />
+        ) : (
+          <div className="flex h-full min-h-[420px] items-center justify-center text-center text-text-faint">
+            <div>
+              <MapPin className="mx-auto size-8" />
+              <p className="mt-2 text-sm">Location pending.</p>
+            </div>
+          </div>
+        )}
       </Card>
 
       <div className="flex flex-col gap-4">
@@ -46,10 +69,23 @@ export default async function MechanicJobDetailPage({
           <p className="text-xs text-text-faint">
             Booked {new Date(job.created_at).toLocaleString()}
           </p>
-          <Button className="mt-4 w-full" disabled>
-            <Navigation className="size-4" />
-            Navigate to Customer
-          </Button>
+          {address?.lat && address?.lng ? (
+            <Button asChild className="mt-4 w-full">
+              <a
+                href={`https://www.openstreetmap.org/directions?to=${address.lat}%2C${address.lng}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Navigation className="size-4" />
+                Navigate to Customer
+              </a>
+            </Button>
+          ) : (
+            <Button className="mt-4 w-full" disabled>
+              <Navigation className="size-4" />
+              Navigate to Customer
+            </Button>
+          )}
         </Card>
       </div>
     </div>
