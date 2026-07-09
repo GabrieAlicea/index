@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { sendBookingConfirmationEmail } from "@/lib/notifications/email";
 import { geocodeAddress, toPointWkt } from "@/lib/maps/geocode";
+import { PLATFORM_FEE_RATE } from "@/lib/stripe/server";
 import { createClient } from "@/lib/supabase/server";
 import { CreateBookingSchema } from "@/lib/validations/booking";
 
@@ -15,7 +16,8 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
     return { error: parsed.error.issues[0]?.message ?? "Invalid booking details." };
   }
 
-  const { addressId, newAddress, vehicleId, serviceIds, schedulingType, scheduledAt } = parsed.data;
+  const { addressId, newAddress, vehicleId, serviceIds, schedulingType, scheduledAt, stripePaymentIntentId } =
+    parsed.data;
 
   const supabase = await createClient();
   const {
@@ -67,7 +69,7 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
   }
 
   const subtotal = services.reduce((sum, s) => sum + Number(s.base_price ?? 0), 0);
-  const platformFee = Math.round(subtotal * 0.1 * 100) / 100;
+  const platformFee = Math.round(subtotal * PLATFORM_FEE_RATE * 100) / 100;
 
   const { data: job, error: jobError } = await supabase
     .from("jobs")
@@ -81,6 +83,7 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
       subtotal,
       platform_fee: platformFee,
       total: subtotal,
+      stripe_payment_intent_id: stripePaymentIntentId ?? null,
     })
     .select("id")
     .single();
@@ -100,6 +103,17 @@ export async function createBooking(input: unknown): Promise<BookingFormState> {
     status: schedulingType === "asap" ? "searching" : "scheduled",
     changed_by: user.id,
   });
+
+  if (stripePaymentIntentId) {
+    await supabase.from("payments").insert({
+      job_id: job.id,
+      stripe_payment_intent_id: stripePaymentIntentId,
+      amount: subtotal,
+      platform_fee_amount: platformFee,
+      mechanic_payout_amount: Math.round((subtotal - platformFee) * 100) / 100,
+      status: "requires_capture",
+    });
+  }
 
   const { data: profile } = await supabase
     .from("profiles")

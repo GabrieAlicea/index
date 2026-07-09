@@ -76,13 +76,24 @@ few Phase 2 pieces pulled forward:
 - ✅ **Transactional email** via Resend — booking confirmations and mechanic
   approval/rejection decisions (`lib/notifications/email.ts`). Sends from Resend's shared
   `onboarding@resend.dev` sender until you verify your own domain in the Resend dashboard.
-- 🚧 **Stripe** — only `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` is configured. There's no
-  server-side charge or Connect payout flow yet because that requires a **secret key**
-  (`STRIPE_SECRET_KEY`), which hasn't been provided. Nothing can move money until that
-  exists.
+- ✅ **Stripe payments & Connect payouts** — the booking wizard collects a real card via
+  Stripe Elements and authorizes (not captures) a manual-capture PaymentIntent
+  (`app/(booking)/book/payment-actions.ts`). Mechanics connect a Stripe Express account
+  for payouts (`/dashboard/mechanic/payouts`, `app/dashboard/mechanic/payouts/actions.ts`).
+  Since there's no automatic dispatch yet, any approved mechanic can claim an open
+  `searching` job (`/dashboard/mechanic/jobs`) and mark it complete
+  (`app/dashboard/mechanic/jobs/actions.ts`), which captures the PaymentIntent and creates
+  a Stripe Transfer to the mechanic's connected account for the payout amount (total minus
+  the 10% platform fee). A webhook route (`app/api/webhooks/stripe/route.ts`) keeps
+  `payments`/`mechanic_profiles` in sync with Stripe's async events once
+  `STRIPE_WEBHOOK_SECRET` is set (needs a public URL registered in the Stripe dashboard,
+  so this only activates after deploying).
+  **Whatever keys are in `.env.local` are what's live** — check whether they're
+  `pk_test_`/`sk_test_` or `pk_live_`/`sk_live_` before testing the booking flow, since live
+  keys really charge real cards.
 - 🚧 **Not yet implemented** (see `docs/REVVY_PRD.md` §17 for the full roadmap): the
-  dispatch wave engine (matching a job to a specific nearby mechanic automatically),
-  Twilio SMS notifications, and the double-blind review reveal job.
+  automatic dispatch wave engine (matching a job to the *nearest* mechanic instead of
+  first-to-claim), Twilio SMS notifications, and the double-blind review reveal job.
 
 ## Project structure
 

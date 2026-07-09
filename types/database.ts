@@ -104,6 +104,8 @@ export interface Database {
           van_description: string | null;
           availability: MechanicAvailability;
           service_radius_miles: number;
+          stripe_connect_account_id: string | null;
+          stripe_payouts_enabled: boolean;
         }>
       >;
       mechanic_documents: Table<
@@ -255,6 +257,7 @@ export interface Database {
           subtotal?: number;
           platform_fee?: number;
           total?: number;
+          stripe_payment_intent_id?: string | null;
         }
       >;
       job_services: Table<
@@ -332,6 +335,8 @@ export interface Database {
           platform_fee_amount: number;
           mechanic_payout_amount: number;
           status?: PaymentStatus;
+          captured_at?: string | null;
+          refunded_at?: string | null;
         }
       >;
       payouts: Table<
@@ -469,6 +474,10 @@ export interface Database {
       approve_mechanic: {
         Args: { p_mechanic_id: string; p_decision: MechanicApprovalStatus; p_reason?: string | null };
         Returns: Database["public"]["Tables"]["mechanic_profiles"]["Row"];
+      };
+      complete_job: {
+        Args: { p_job_id: string; p_stripe_transfer_id?: string | null };
+        Returns: Database["public"]["Tables"]["jobs"]["Row"];
       };
     };
   };

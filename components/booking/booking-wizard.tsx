@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Calendar, Car, CheckCircle2, MapPin, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Car, MapPin, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 import { createBooking } from "@/app/(booking)/book/actions";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PaymentStep } from "@/components/booking/payment-step";
 import { StepperHeader } from "@/components/booking/stepper-header";
 import { formatCurrency } from "@/lib/utils";
 
@@ -100,7 +101,7 @@ export function BookingWizard({
     return true;
   }
 
-  async function handleConfirm() {
+  async function handleConfirm(stripePaymentIntentId: string) {
     if (!vehicleId) {
       toast.error("Select a vehicle before confirming.");
       return;
@@ -118,6 +119,7 @@ export function BookingWizard({
       serviceIds: Array.from(selectedServiceIds),
       schedulingType,
       scheduledAt,
+      stripePaymentIntentId,
     });
 
     if (result?.error) {
@@ -360,10 +362,11 @@ export function BookingWizard({
             </div>
             <p className="mt-1 text-xs text-text-faint">Includes tax &amp; platform fee. Charged on completion.</p>
           </Card>
-          <Button size="lg" onClick={handleConfirm} disabled={submitting}>
-            {submitting ? "Confirming…" : "Confirm Booking"}
-            <CheckCircle2 className="size-4" />
-          </Button>
+          <PaymentStep
+            serviceIds={Array.from(selectedServiceIds)}
+            submitting={submitting}
+            onConfirmed={handleConfirm}
+          />
         </div>
       )}
 

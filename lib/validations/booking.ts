@@ -14,6 +14,7 @@ export const CreateBookingSchema = z.object({
   serviceIds: z.array(z.string().uuid()).min(1, "Select at least one service."),
   schedulingType: z.enum(["asap", "scheduled"]),
   scheduledAt: z.string().datetime().optional(),
+  stripePaymentIntentId: z.string().optional(),
 });
 
 export type CreateBookingInput = z.infer<typeof CreateBookingSchema>;

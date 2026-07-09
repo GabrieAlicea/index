@@ -4,10 +4,13 @@ import { MapPin, Navigation } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { CompleteJobButton } from "@/components/dashboard/mechanic/complete-job-button";
 import { MapView } from "@/components/maps/map-view";
 import { getCurrentUser } from "@/lib/auth/get-current-user";
 import { createClient } from "@/lib/supabase/server";
 import { formatCurrency } from "@/lib/utils";
+
+const COMPLETABLE_STATUSES = new Set(["accepted", "en_route", "arrived", "in_progress"]);
 
 export default async function MechanicJobDetailPage({
   params,
@@ -70,7 +73,7 @@ export default async function MechanicJobDetailPage({
             Booked {new Date(job.created_at).toLocaleString()}
           </p>
           {address?.lat && address?.lng ? (
-            <Button asChild className="mt-4 w-full">
+            <Button asChild className="mt-4 w-full" variant="secondary">
               <a
                 href={`https://www.openstreetmap.org/directions?to=${address.lat}%2C${address.lng}`}
                 target="_blank"
@@ -81,10 +84,15 @@ export default async function MechanicJobDetailPage({
               </a>
             </Button>
           ) : (
-            <Button className="mt-4 w-full" disabled>
+            <Button className="mt-4 w-full" variant="secondary" disabled>
               <Navigation className="size-4" />
               Navigate to Customer
             </Button>
+          )}
+          {COMPLETABLE_STATUSES.has(job.status) && (
+            <div className="mt-3">
+              <CompleteJobButton jobId={job.id} />
+            </div>
           )}
         </Card>
       </div>
